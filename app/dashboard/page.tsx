@@ -1,3 +1,5 @@
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
@@ -6,9 +8,33 @@ import { ArrowRight, BarChart3, CreditCard, Gift, History, TrendingUp } from "lu
 import Link from "next/link"
 import DashboardLayout from "@/components/dashboard-layout"
 import { getUserData } from "@/lib/user"
+import { useEffect, useState } from "react"
 
-export default async function DashboardPage() {
-  const userData = await getUserData()
+export default function DashboardPage() {
+  const [userData, setUserData] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getUserData()
+      setUserData(data)
+      setLoading(false)
+    }
+    fetchData()
+  }, [])
+
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-2">
+            <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+            <p className="text-muted-foreground">Loading your investment data...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    )
+  }
 
   const daysActive = userData.firstInvestmentDate
     ? Math.min(30, Math.floor((Date.now() - new Date(userData.firstInvestmentDate).getTime()) / (1000 * 60 * 60 * 24)))

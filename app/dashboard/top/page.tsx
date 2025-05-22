@@ -1,10 +1,36 @@
+"use client"
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Medal, Star, Trophy, Users } from "lucide-react"
 import Link from "next/link"
 import DashboardLayout from "@/components/dashboard-layout"
+import { useEffect, useState } from "react"
 
 export default function TopInvestorsPage() {
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Simulate loading data
+    const timer = setTimeout(() => {
+      setLoading(false)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (loading) {
+    return (
+      <DashboardLayout>
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-2">
+            <h1 className="text-3xl font-bold tracking-tight">Top Investors</h1>
+            <p className="text-muted-foreground">Loading top investors data...</p>
+          </div>
+        </div>
+      </DashboardLayout>
+    )
+  }
+
   // This would normally come from the server
   const topInvestors = [
     { rank: 1, username: "crypto_king", invested: 5000, profit: 600, referrals: 12 },
